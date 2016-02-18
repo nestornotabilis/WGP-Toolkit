@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Project Buildfile" default="build" basedir=".">
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+	<description>
+	Ant buildfile.
+	</description>
+
+	<!-- Program-specific properties: -->
+	<property file="build.properties"/>
+
+    	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+        	                   <!--~~~~~~~~~~~~~~~~~~~~~-->
+                	           <!-- General properties: -->
+                        	   <!--~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<!-- Base directory. -->
+    	<property name="base.dir" value="."/> 					   
+	
+	<!-- Source files. -->
+	<property name="src.dir"		value="${base.dir}/src"/>
+
+	<!-- Resources directory. -->
+        <property name="resources.dir"          value="${base.dir}/resources"/>
+        <property name="overview.file"          value="overview.html" />
+
+	<!-- Specify location for jar files that will need to be packaged with final jar-->
+	<property name="lib.dir"                value="${resources.dir}/lib"/>	
+
+	<!-- Specify the various temporary build directories. -->
+    	<property name="build.dir"		value="${base.dir}/build"/>
+    	<property name="build.bin.dir"		value="${build.dir}/classes"/>	
+    	<property name="build.doc.dir"		value="${build.dir}/doc"/>	
+    	<property name="build.doc.api.dir" 	value="${build.doc.dir}/api"/>	
+    	<property name="build.lib.dir"		value="${build.dir}/lib"/>
+	
+    	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    	<target description="Removes all generated files." name="clean">
+	<delete dir="${build.dir}"/>
+	<delete dir="${deploy.dir}"/>
+	<delete dir="${master.prog.name}-${version}"/>
+	<delete file="${master.prog.name}-${version}.zip"/>
+    	</target>
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<target description="Removes all deployed files." name="cleanDeploy">
+        <delete file="${deploy.dir}/${master.prog.name}"/>
+		<delete file="${deploy.dir}/${prog.name.1}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.2}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.3}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.4}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.5}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.6}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.7}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.8}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.9}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.10}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.11}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.12}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.13}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.14}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.15}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.16}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.17}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.18}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.19}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.20}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.21}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.22}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.23}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.24}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.25}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.26}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.27}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.28}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.29}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.30}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.31}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.32}.jar"/>
+		<delete file="${deploy.dir}/${prog.name.33}.jar"/>
+		<delete dir="${doc.deploy.dir}"/>
+    	</target>
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+    	<target name="prepareBuild">
+        	<mkdir dir="${build.dir}"/>
+        	<mkdir dir="${build.bin.dir}"/>
+        	<mkdir dir="${build.lib.dir}"/>
+        	<mkdir dir="${build.doc.dir}"/>
+        	<mkdir dir="${build.doc.api.dir}"/>
+    	</target>
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<target name="javadoc" depends="build" description="Produce api documentation">
+		
+		<javadoc 
+			Overview="${resources.dir}/${overview.file}" 
+			author="true" 
+			destdir="${build.doc.api.dir}" 
+			version="true"
+			>
+				
+			<fileset defaultexcludes="yes" dir="${src.dir}">
+			<include name="**/*.java"/>
+			</fileset>
+			<classpath path="${classpath}"/> 
+			
+		</javadoc>      
+	
+	</target>
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<target name="build" description="Build project" depends="prepareBuild">
+		
+		<javac 
+			debug="true"
+                        debuglevel="lines,vars,source"
+			casesensitive="true" 
+			classpath="${classpath}" 
+			deprecation="true" 
+			destdir="${build.bin.dir}" 
+			source="1.6" 
+			srcdir="${src.dir}" 
+			target="1.6"
+			includeantruntime="false"
+			>
+			<compilerarg value="-Xlint:unchecked"/>	
+		</javac>
+
+		<copy file="${lib.dir}/sam-${picard.version}.jar" todir="${build.lib.dir}"/>
+		<copy file="${lib.dir}/jopt-simple-${jopt.simple.version}.jar" todir="${build.lib.dir}"/>	
+		<copy file="${lib.dir}/JavaPlot-${javaplot.version}.jar" todir="${build.lib.dir}"/>
+		<copy file="${lib.dir}/BAMStats-${bamstats.version}.jar" todir="${build.lib.dir}"/>
+
+	
+	</target>
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+	<target name="run" description="Run project" depends="build">
+		
+		<java 
+			classname="${main.class}" 
+			classpath="${build.bin.dir};${classpath}" 
+			fork="true"
+			maxmemory="1g"
+			>
+			<arg value="${firstArg}"/>
+                        <arg value="${secondArg}"/>
+		</java>
+
+	</target>
+
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+	<target name="mkjars" depends="build" description="Make jars">
+		
+		<jar 
+			destfile="${build.dir}/${prog.name.1}.jar" 
+			basedir="${build.bin.dir}"
+			excludes="test/**"
+			>
+		
+			<manifest>
+				<!-- Who is building this jar? -->
+				<attribute name="Built-By" value="${author}"/>
+				<!-- Information about the program itself -->
+				<attribute name="Implementation-Vendor" value="${vendor}"/>
+				<attribute name="Implementation-Title" value="${prog.name.1}"/>
+				<attribute name="Implementation-Version" value="${version}"/>
+				
+				<attribute name="Main-Class" value="${main.class.1}" />
+				<attribute name="Class-Path" value="${classpath2}" />
+			</manifest>
+		
+		</jar>
+
+
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.2}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.2}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.2}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.3}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.3}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.3}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.4}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.4}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.4}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.5}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.5}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.5}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.6}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.6}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.6}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.7}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.7}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.7}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.8}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.8}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.8}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.9}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.9}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.9}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.10}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.10}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.10}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.11}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.11}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.11}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.12}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.12}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.12}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.13}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.13}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.13}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.14}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.14}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.14}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.15}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.15}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.15}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+		
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.16}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.16}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.16}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.17}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.17}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.17}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+
+                <jar 
+                        destfile="${build.dir}/${prog.name.18}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.18}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.18}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		
+		<jar 
+                        destfile="${build.dir}/${prog.name.19}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.19}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.19}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+
+		 <jar 
+                        destfile="${build.dir}/${prog.name.20}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.20}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.20}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.21}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.21}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.21}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.22}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.22}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.22}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		
+		 <jar 
+                        destfile="${build.dir}/${prog.name.23}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.23}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.23}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.24}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.24}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.24}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.25}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.25}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.25}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.26}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.26}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.26}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.27}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.27}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.27}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.28}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.28}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.28}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.29}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.29}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.29}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.30}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.30}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.30}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.31}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.31}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.31}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.32}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.32}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.32}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+		<jar 
+                        destfile="${build.dir}/${prog.name.33}.jar" 
+                        basedir="${build.bin.dir}"
+                        excludes="test/**"
+                        >
+
+                        <manifest>
+                                <!-- Who is building this jar? -->
+                                <attribute name="Built-By" value="${author}"/>
+                                <!-- Information about the program itself -->
+                                <attribute name="Implementation-Vendor" value="${vendor}"/>
+                                <attribute name="Implementation-Title" value="${prog.name.33}"/>
+                                <attribute name="Implementation-Version" value="${version}"/>
+
+                                <attribute name="Main-Class" value="${main.class.33}" />
+                                <attribute name="Class-Path" value="${classpath2}" />
+                        </manifest>
+
+                </jar>
+
+	</target>
+
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+	<target name="deploy" depends="mkjars" description="Deploy jar">
+
+		
+		<mkdir dir="${deploy.dir}/${master.prog.name}-${version}"/>
+                <mkdir dir="${deploy.dir}/${master.prog.name}-${version}/lib"/>
+		
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.1}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.2}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.3}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.4}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.5}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.6}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.7}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.8}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.9}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.10}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.11}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.12}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.13}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.14}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.15}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.16}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.17}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.18}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.19}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.20}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.21}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.22}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.23}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.24}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.25}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.26}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.27}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.28}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.29}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.30}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.31}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.32}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}" file="${build.dir}/${prog.name.33}.jar"/>
+		<copy todir="${deploy.dir}/${master.prog.name}-${version}/lib">
+			<fileset dir="${build.lib.dir}"/>
+		</copy>
+
+		<zip 
+			destfile="${master.prog.name}-${version}.zip" 
+			basedir="${deploy.dir}" 
+			/>
+
+	</target>
+	
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	
+</project>	
